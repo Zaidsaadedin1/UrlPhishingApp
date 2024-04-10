@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
 
 const NextWelcomeScreen = ({ navigation }) => {
   const handleNextPress = () => {
@@ -7,19 +13,21 @@ const NextWelcomeScreen = ({ navigation }) => {
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: "rgba(26, 34, 165, 0.8)" }]}
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "rgba(26, 34, 165, 0.8)" }}
     >
-      <View style={styles.content}>
-        <Text style={styles.title}>Next Screen</Text>
-        <Text style={styles.description}>
-          This is the next screen after the WelcomeScreen.
-        </Text>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Next Screen</Text>
+          <Text style={styles.description}>
+            This is the next screen after the WelcomeScreen.
+          </Text>
+        </View>
+        <TouchableOpacity style={styles.button} onPress={handleNextPress}>
+          <Text style={styles.buttonText}>START</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.button} onPress={handleNextPress}>
-        <Text style={styles.buttonText}>START</Text>
-      </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
