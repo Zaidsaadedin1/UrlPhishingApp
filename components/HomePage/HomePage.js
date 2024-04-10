@@ -18,8 +18,8 @@ function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const data = {
-    labels: ["Swim", "Bike", "Run"],
-    data: [0.0, 0.0, 0.0],
+    labels: ["Logistic", "Naive", "Gradient"],
+    data: [0.3, 0.7, 0.9],
   };
   async function detectPhishing() {
     if (!url) {
@@ -80,10 +80,9 @@ function HomePage() {
               <ProgressChart
                 data={data}
                 width={300}
-                height={220}
+                height={200}
                 strokeWidth={16}
                 radius={32}
-                hideLegend={false}
                 chartConfig={{
                   color: (opacity = 1) => `rgba(26, 34, 146, ${opacity})`,
                   backgroundGradientFrom: "#fff",
@@ -102,6 +101,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#fff",
+    padding: 10,
   },
   container: {
     flexGrow: 1,
@@ -131,6 +131,9 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
     marginTop: 20,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    width: 400,
   },
   loadingText: {
     textAlign: "center",
@@ -139,12 +142,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   resultItem: {
-    alignItems: "center",
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    marginBottom: 10,
+    width: "100%",
     backgroundColor: "white",
+    padding: 10,
   },
   resultTitle: {
     fontSize: 18,

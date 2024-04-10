@@ -13,18 +13,33 @@ const NextWelcomeScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "rgba(26, 34, 165, 0.8)" }}
-    >
-      <View style={styles.container}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Next Screen</Text>
-          <Text style={styles.description}>
-            This is the next screen after the WelcomeScreen.
+    <SafeAreaView style={styles.container}>
+      <View style={styles.contentContainer}>
+        <Text style={styles.title}>Our Security Solution!</Text>
+        <Text style={styles.description}>
+          Explore our machine learning-powered tools to detect phishing URLs.
+        </Text>
+        <View style={styles.additionalTextContainer}>
+          <Text style={styles.additionalText}>
+            Our machine learning models are trained to:
+          </Text>
+          <Text style={styles.additionalText}>
+            .Identify suspicious patterns in URLs.
+          </Text>
+          <Text style={styles.additionalText}>
+            .Utilize advanced algorithms to analyze website content for phishing
+            indicators.
+          </Text>
+          <Text style={styles.additionalText}>
+            .Deliver proactive alerts and robust protection mechanisms against
+            phishing attacks in real-time.
           </Text>
         </View>
+      </View>
+
+      <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleNextPress}>
-          <Text style={styles.buttonText}>START</Text>
+          <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -34,34 +49,53 @@ const NextWelcomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: "white",
+    padding: 16,
+    marginTop: 10,
   },
-  content: {
-    alignItems: "center",
-    marginBottom: 50,
+  contentContainer: {
+    flex: 1,
+    justifyContent: "space-between",
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: "bold",
-    color: "white",
-    marginBottom: 10,
+    color: "black",
+    marginBottom: 16,
   },
   description: {
-    fontSize: 16,
-    color: "white",
-    textAlign: "center",
+    fontSize: 25,
+    color: "black",
+    marginBottom: 12,
+    fontWeight: "bold",
+  },
+  additionalTextContainer: {
+    flex: 1,
+    justifyContent: "center",
+    fontWeight: "bold",
+  },
+  additionalText: {
+    fontSize: 23,
+    color: "black",
+    marginBottom: 8,
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    alignItems: "flex-end",
+    marginTop: 30,
   },
   button: {
-    backgroundColor: "white",
+    backgroundColor: "black",
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
+    alignItems: "center",
+    width: 150,
   },
   buttonText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "rgba(26, 34, 165, 0.8)",
+    color: "white",
   },
 });
 
