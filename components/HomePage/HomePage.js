@@ -4,25 +4,23 @@ import {
   Text,
   TextInput,
   View,
-  Button,
   StyleSheet,
   SafeAreaView,
   TouchableHighlight,
 } from "react-native";
 import { apis } from "../../Api/Apis";
-import { ProgressChart } from "react-native-chart-kit";
 import LoadingDots from "react-native-loading-dots";
+import { PieChart } from "react-native-gifted-charts";
 
 function HomePage() {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const data = {
-    labels: ["Logistic", "Naive", "Gradient"],
-    data: [0.3, 0.7, 0.9],
-  };
+  const [data, setData] = useState([]);
+
   async function detectPhishing() {
     if (!url) {
+      setError("Please enter a URL.");
       return;
     }
     setIsLoading(true);
@@ -31,16 +29,15 @@ function HomePage() {
       try {
         const response = await apis.checkApi(url);
         if (response.status === 200) {
-          setIsLoading(false);
           setData([{ title: "Fake URL Detected", score: response.data.score }]);
-          setUrl("");
         } else {
           throw new Error(`Failed to fetch data. Status: ${response.status}`);
         }
       } catch (error) {
         console.error("Error checking URL:", error);
+        setError(`Error checking URL: ${error.message}`);
+      } finally {
         setIsLoading(false);
-        setError("Error checking URL. Please try again.");
         setUrl("");
       }
     }, 2000);
@@ -48,51 +45,97 @@ function HomePage() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Phishing Detector</Text>
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <LoadingDots />
         </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter URL to Check"
-            value={url}
-            onChangeText={(text) => setUrl(text)}
-          />
-          <View style={styles.buttonContainer}>
-            <View>
-              <TouchableHighlight
-                style={styles.submit}
-                onPress={() => detectPhishing()}
-                underlayColor="#fff"
-              >
-                <Text style={styles.submitText}>Check Url</Text>
-              </TouchableHighlight>
+      ) : (
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.title}>Phishing Detector</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter URL to Check"
+              value={url}
+              onChangeText={setUrl}
+            />
+
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
+          </View>
+          <View style={styles.submit}>
+            <TouchableHighlight
+              style={styles.button}
+              onPress={detectPhishing}
+              underlayColor="#ddd"
+            >
+              <Text style={styles.submitText}>Check URL</Text>
+            </TouchableHighlight>
+          </View>
+          <View style={styles.resultContainer}>
+            <View style={styles.pieChart}>
+              <PieChart
+                donut
+                innerRadius={95}
+                data={[
+                  {
+                    value: 33.33,
+                    color: "rgba(46, 54, 195, 0.8)",
+                    label: "First Lighter Blue",
+                  },
+
+                  { value: 10, color: "#F0F8FF", label: "gray" },
+                ]}
+              />
+              <Text>Naive Bayes Algorithm</Text>
+            </View>
+            <View style={styles.pieChart}>
+              <PieChart
+                donut
+                innerRadius={95}
+                data={[
+                  {
+                    value: 33.33,
+                    color: "rgba(66, 74, 225, 0.8)",
+                    label: "Second Lighter Blue",
+                  },
+
+                  { value: 60, color: "#F0F8FF", label: "gray" },
+                ]}
+              />
+              <Text>Logistic Regression Algorithm</Text>
+            </View>
+
+            <View style={styles.pieChart}>
+              <PieChart
+                donut
+                innerRadius={95}
+                data={[
+                  {
+                    value: 33.34,
+                    color: "rgba(86, 94, 255, 0.8)",
+                    label: "Third Lighter Blue",
+                  },
+                  { value: 70, color: "#F0F8FF", label: "gray" },
+                ]}
+              />
+              <Text>Gradient Descent Algorithm</Text>
             </View>
           </View>
-        </View>
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
-        <View style={styles.resultContainer}>
-          {isLoading ? (
-            <LoadingDots />
-          ) : (
-            <View style={styles.resultItem}>
-              <ProgressChart
-                data={data}
-                width={300}
-                height={200}
-                strokeWidth={16}
-                radius={32}
-                chartConfig={{
-                  color: (opacity = 1) => `rgba(26, 34, 146, ${opacity})`,
-                  backgroundGradientFrom: "#fff",
-                  backgroundGradientTo: "#fff",
-                }}
+          {data.map((item, index) => (
+            <View key={index} style={styles.resultContainer}>
+              <PieChart
+                donut
+                data={[
+                  { value: 50, color: "#ff0000", label: "Red" },
+                  { value: 50, color: "#F0F8FF", label: "gray" },
+                ]}
               />
             </View>
-          )}
-        </View>
-      </ScrollView>
+          ))}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 }
@@ -131,44 +174,24 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
     marginTop: 20,
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    width: 400,
-  },
-  loadingText: {
-    textAlign: "center",
-    fontSize: 18,
-    fontStyle: "italic",
-    marginBottom: 10,
-  },
-  resultItem: {
     width: "100%",
-    backgroundColor: "white",
-    padding: 10,
-  },
-  resultTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  resultScore: {
-    fontSize: 16,
-  },
-  buttonContainer: {
+    justifyContent: "center",
     alignItems: "center",
-  },
-  buttonView: {
-    width: 100,
   },
   errorText: {
     textAlign: "center",
-    color: "white",
+    color: "red",
     marginBottom: 10,
   },
   submit: {
-    marginRight: 40,
-    marginLeft: 40,
-    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(26, 34, 165, 0.8)",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#fff",
+  },
+  button: {
     width: 150,
   },
   submitText: {
@@ -176,10 +199,24 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     color: "#fff",
     textAlign: "center",
-    backgroundColor: "rgba(26, 34, 165, 0.8)",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#fff",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  resultTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  resultScore: {
+    fontSize: 16,
+  },
+  pieChart: {
+    justifyContent: "center",
+    alignContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
   },
 });
 
